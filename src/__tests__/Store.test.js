@@ -32,7 +32,7 @@ describe('Store', () => {
 
   describe('getMenu', () => {
     beforeEach(() => {
-      fetchMock.get(/order\.dominos\.com\/power\/store\/8386\/menu/, response.result);
+      fetchMock.get(/order\.dominos\.com\/power\/store\/8386\/menu/, response);
     });
 
     it('should work', async () => {
@@ -50,7 +50,7 @@ describe('Store', () => {
 
   describe('getFriendlyNames', () => {
     beforeEach(() => {
-      fetchMock.get(/order\.dominos\.com\/power\/store\/8386\/menu/, response.result);
+      fetchMock.get(/order\.dominos\.com\/power\/store\/8386\/menu/, response);
     });
 
     it('should get all friendly item names from menu', async () => {

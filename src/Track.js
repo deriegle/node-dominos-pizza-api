@@ -1,8 +1,6 @@
 const urls = require('../urls.json');
 const parser = require('xml2json');
 
-global.fetch = require('node-fetch');
-
 const byUrl = async (url) => {
   let result;
 

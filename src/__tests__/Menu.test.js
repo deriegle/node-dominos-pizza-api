@@ -7,7 +7,7 @@ const storeID = 8386;
 describe('Menu', () => {
   describe('ParseMenu', () => {
     beforeEach(() => {
-      fetchMock.get(/order\.dominos\.com\/power\/store\/8386\/menu/, response.result);
+      fetchMock.get(/order\.dominos\.com\/power\/store\/8386\/menu/, response);
     });
 
     it('should parse menu', async () => {
