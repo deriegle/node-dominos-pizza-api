@@ -1,5 +1,3 @@
-'use strict';
-
 const httpJson = require('./http-json.js');
 const urls = require('../urls.json');
 const Address = require('./Address.js');

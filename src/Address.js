@@ -1,8 +1,4 @@
-'use strict';
-
-var util = require('util');
-
-var Address = function(parameters) {
+const Address = function(parameters) {
     Object.defineProperties(
         this,
         {
@@ -66,7 +62,7 @@ var Address = function(parameters) {
 
 
 
-        if (util.isArray(this._parameters)) {
+        if (Array.isArray(this._parameters)) {
             this.Street = this._parameters[0];
             this.City = this._parameters[1];
             this.Region = this._parameters[2];

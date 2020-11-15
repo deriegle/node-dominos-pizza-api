@@ -1,5 +1,3 @@
-'use strict';
-
 class Coupon {
   constructor(parameters) {
     this.Code = parameters.code;

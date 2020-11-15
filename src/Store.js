@@ -2,7 +2,6 @@ const Menu = require('./Menu.js');
 const fs = require('fs');
 const httpJson = require('./http-json');
 const urls = require('../urls.json');
-const util = require('util');
 
 class Store {
   constructor({ ID }) {

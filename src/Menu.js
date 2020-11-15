@@ -1,5 +1,3 @@
-'use strict';
-
 const MenuItem = require('./MenuItem');
 const MenuCategory = require('./MenuCategory');
 
