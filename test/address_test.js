@@ -1,7 +1,4 @@
-'use strict';
-
-var mocha = require('mocha');
-var expect = require('chai').expect;
+import Address from '../src/Address.js';
 var Address = require('../src/Address');
 
 describe('Address', function() {
