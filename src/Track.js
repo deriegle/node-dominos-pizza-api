@@ -1,6 +1,7 @@
 const urls = require('../urls.json');
-const request = require('request');
 const parser = require('xml2json');
+
+global.fetch = require('node-fetch');
 
 const byUrl = async (url) => {
   let result;
@@ -14,14 +15,14 @@ const byUrl = async (url) => {
     };
   }
 
-  if (res.ok) {
+  if (!result.ok) {
     return {
       success: false,
-      message: `HTML Status Code Error ${res.status}`,
+      message: `HTML Status Code Error ${result.status}`,
     };
   }
 
-  const json = parser.toJSON(res.body, {
+  const json = parser.toJson(result.body, {
     coerce: false,
     sanitize: false,
     object: true,
@@ -53,6 +54,7 @@ const byUrl = async (url) => {
   }
 
   return {
+    success: true,
     orders: json['soap:Envelope']['soap:Body'].GetTrackerDataResponse.OrderStatuses,
     query: json['soap:Envelope']['soap:Body'].GetTrackerDataResponse.Query
   };
@@ -73,7 +75,7 @@ const byId = async (storeID, orderKey) => {
   if (!storeID || !orderKey) {
     return {
       success: false,
-      message: 'storeID and orderKey are all required to get pizza info using the orderKey'
+      message: 'StoreID and orderKey are required!'
     };
   }
 
