@@ -1,6 +1,6 @@
 const Store = require('../Store');
 const fetchMock = require('fetch-mock');
-const response = require('../../sampleResp/menu8386.json');
+const response = require('./fixtures/menu8386.json');
 
 describe('Store', () => {
   it('should create store', () => {

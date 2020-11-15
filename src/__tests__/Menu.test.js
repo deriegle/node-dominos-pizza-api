@@ -1,6 +1,6 @@
 const fetchMock = require('fetch-mock');
 const Store = require('../Store');
-const response = require('../../sampleResp/menu8386.json');
+const response = require('./fixtures/menu8386.json');
 
 const storeID = 8386;
 
