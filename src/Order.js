@@ -128,7 +128,8 @@ Order.prototype.validate = function(callback) {  //Validate Order
     'Order' : this
   });
 
-  httpJson.post(urls.order.validate, stringified, this.mergeResponse.bind(this,callback));
+  const response = await httpJson.post(urls.order.validate, stringified);
+  this.mergeResponse(callback, response);
 };
 
 Order.prototype.price = function(callback) {
@@ -142,14 +143,15 @@ Order.prototype.price = function(callback) {
     return;
   }
 
-  var stringified = JSON.stringify({
+  const stringified = JSON.stringify({
     'Order' : this
   });
 
-  httpJson.post(urls.order.price, stringified, this.mergeResponse.bind(this,callback));
+  const response = await httpJson.post(urls.order.price, stringified);
+  this.mergeResponse(callback, response);
 };
 
-Order.prototype.place = function(callback) {
+Order.prototype.place = async function(callback) {
   if(!this.Products || !callback) {
       if(callback) {
           callback({
@@ -163,7 +165,7 @@ Order.prototype.place = function(callback) {
     'Order' : this
   });
 
-  httpJson.post(urls.order.place, stringified, callback);
+  callback(await httpJson.post(urls.order.place, stringified));
 };
 
 Order.prototype.mergeResponse = function(callback,response){

@@ -22,7 +22,7 @@ class Store {
       return;
     }
 
-    await httpJson.get(urls.store.info.replace('${storeID}', this.ID), callback);
+    callback(await httpJson.get(urls.store.info.replace('${storeID}', this.ID)));
   }
 
   async getMenu(callback, lang, noCache) {
@@ -45,10 +45,9 @@ class Store {
     const url = urls.store.menu.replace('${storeID}', this.ID)
         .replace('${lang}', lang || 'en');
 
-    await httpJson.get(url, (jsonObj) => {
-      this.cachedMenu = new Menu(jsonObj);
-      callback(this.cachedMenu);
-    });
+    const jsonObj = await httpJson.get(url);
+    this.cachedMenu = new Menu(jsonObj);
+    callback(this.cachedMenu);
   }
 
   async getFriendlyNames(callback, lang) {
@@ -66,18 +65,17 @@ class Store {
     const url = urls.store.menu.replace('${storeID}', this.ID)
       .replace('${lang}', lang || 'en');
 
-    await httpJson.get(url, function(result) {
-      var itemMapping = [];
-      var keys = Object.keys(result.result.Variants);
+    const result = await httpJson.get(url);
+    const itemMapping = [];
+    const keys = Object.keys(result.result.Variants);
 
-      keys.forEach(function(key) {
-        var json = {};
-        json[result.result.Variants[key].Name] = key
-        itemMapping.push(json);
-      });
-
-      callback({ success: true, result: itemMapping });
+    keys.forEach((key) => {
+      const json = {};
+      json[result.result.Variants[key].Name] = key
+      itemMapping.push(json);
     });
+
+    callback({ success: true, result: itemMapping });
   }
 }
 

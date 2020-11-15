@@ -33,7 +33,7 @@ const findNearbyStores = async (address, pickUpType, callback) => {
     .replace('${line2}', encodeURI( addressLines.line2))
     .replace('${type}', pickUpType || 'Delivery');
 
-  await httpJson.get(url, callback);
+  callback(await httpJson.get(url));
 };
 
 module.exports = {
