@@ -4,9 +4,9 @@ const MenuCategory = require('./MenuCategory');
 class Menu {
   constructor(menuData) {
     if(!menuData) {
-        menuData={};
+      menuData = {};
     } else {
-        this.parseMenu(menuData);
+      this.parseMenu(menuData);
     }
 
     this.menuData = menuData;
@@ -17,43 +17,47 @@ class Menu {
   }
 
   buildCategories(categoryData,parent) {
-    var category = new MenuCategory(categoryData,parent);
-    for (var subIndex in categoryData.Categories) {
-        category.getSubcategories().push(this.buildCategories(categoryData.Categories[subIndex],category));
+    const category = new MenuCategory(categoryData,parent);
+
+    for (const subIndex in categoryData.Categories) {
+      category.getSubcategories().push(this.buildCategories(categoryData.Categories[subIndex],category));
     }
-    categoryData.Products.forEach((function(productCode) { //link up products and categories
-        var product = this.menuByCode[productCode];
-        if (!product) {
-            console.log("PRODUCT NOT FOUND: "+productCode,category.getCode());
-            return;
-        }
-        category.getProducts().push(product);
-        product.getCategories().push(category);
-    }).bind(this));
+
+    categoryData.Products.forEach((productCode) => {
+      //link up products and categories
+      const product = this.menuByCode[productCode];
+
+      if (!product) {
+        console.log("PRODUCT NOT FOUND: "+productCode,category.getCode());
+        return;
+      }
+
+      category.getProducts().push(product);
+      product.getCategories().push(category);
+    });
+
     return category;
   }
 
-  parseItems(parentMenuData,ParseClass) {
-    var items = [];
-    Object.keys(parentMenuData).forEach((function(code) {
-        var menuData = parentMenuData[code];
-        var obj = new ParseClass(menuData);
-        this.menuByCode[obj.getCode()] = obj;
-        items.push(obj);
-    }).bind(this));
-    return items;
+  parseItems(parentMenuData) {
+    Object.values(parentMenuData).forEach((menuData) => {
+      const menuItem = new MenuItem(menuData);
+      this.menuByCode[menuItem.getCode()] = menuItem;
+    });
   }
 
   parseMenu(menuData) {
     this.menuByCode = {};
-    var products = this.parseItems(menuData.result.Products,MenuItem);
-    var coupons = this.parseItems(menuData.result.Coupons,MenuItem);
-    var preconfigured = this.parseItems(menuData.result.PreconfiguredProducts,MenuItem);
+
+    this.parseItems(menuData.result.Products);
+    this.parseItems(menuData.result.Coupons);
+    this.parseItems(menuData.result.PreconfiguredProducts);
 
     this.rootCategories = {}; //generate category tree using MenuCategory objects
-    for (var categoryType in menuData.result.Categorization) {
-        var categoryData = menuData.result.Categorization[categoryType];
-        this.rootCategories[categoryType] = this.buildCategories(categoryData);
+
+    for (const categoryType in menuData.result.Categorization) {
+      const categoryData = menuData.result.Categorization[categoryType];
+      this.rootCategories[categoryType] = this.buildCategories(categoryData);
     }
   }
 
