@@ -1,97 +1,88 @@
-'use strict';
+const urls = require('../urls.json');
+const request = require('request');
+const parser = require('xml2json');
 
-var urls = require('../urls.json');
-var request = require('request');
-var parser = require('xml2json');
+const byUrl = async (url) => {
+  let result;
 
-module.exports.byPhone = function(phone, callback) {
-    if( !phone || !callback) {
-        if(callback) {
-            callback({
-                success: false,
-                message: 'Phone is required!'
-            });
-        }
-        return;
-    }
+  try {
+    result = await fetch(url)
+  } catch (error) {
+    return {
+      success: false,
+      message: error
+    };
+  }
 
-    this.byUrl(urls.track + 'Phone=' + phone, callback);
+  if (res.ok) {
+    return {
+      success: false,
+      message: `HTML Status Code Error ${res.status}`,
+    };
+  }
+
+  const json = parser.toJSON(res.body, {
+    coerce: false,
+    sanitize: false,
+    object: true,
+    trim: false
+  });
+
+  if (!json['soap:Envelope']) {
+    return {
+      success: false,
+      message: 'API soap:Envelope not present',
+      data: result
+    };
+  }
+
+  if (!json['soap:Envelope']['soap:Body']) {
+    return {
+      success: false,
+      message: 'API soap:Body not present',
+      data: result
+    };
+  }
+
+  if(!json['soap:Envelope']['soap:Body'].GetTrackerDataResponse){
+    return {
+      success: false,
+      message:'API GetTrackerDataResponse not present',
+      data: result
+    };
+  }
+
+  return {
+    orders: json['soap:Envelope']['soap:Body'].GetTrackerDataResponse.OrderStatuses,
+    query: json['soap:Envelope']['soap:Body'].GetTrackerDataResponse.Query
+  };
+}
+
+const byPhone = async (phone) => {
+  if (!phone) {
+    return {
+      success: false,
+      message: 'Phone is required!'
+    };
+  }
+
+  return byUrl(`${urls.track}Phone=${phone}`);
 };
 
-module.exports.byId = function(storeID, orderKey, callback) {
-    if(!storeID || !orderKey || !callback){
-        if(callback)
-            callback({
-                success: false,
-                message: 'storeID, orderKey, and callback are all required to get pizza info using the orderKey'
-            });
-        return;
-    }
+const byId = async (storeID, orderKey) => {
+  if (!storeID || !orderKey) {
+    return {
+      success: false,
+      message: 'storeID and orderKey are all required to get pizza info using the orderKey'
+    };
+  }
 
-    this.byUrl(urls.track + 'StoreID=' + storeID + '&OrderKey=' + orderKey, callback);
+  return byUrl(`${urls.track}StoreID=${storeID}&OrderKey=${orderKey}`);
 };
 
-module.exports.byUrl = function(url, callback){
-    request.get(
-        url,
-        function (error, response, body) {
-            if (error) {
-                callback({
-                    success: false,
-                    message: error
-                });
-                return;
-            }
 
-            if (response.statusCode !== 200){
-                callback({
-                    success: false,
-                    message:'HTML Status Code Error ' + response.statusCode
-                });
-                return;
-            }
-
-            var result = parser.toJson(
-                body,
-                {
-                    coerce: false,
-                    sanitize: false,
-                    object: true,
-                    trim: false
-                }
-            );
-
-            if(!result['soap:Envelope']){
-                callback({
-                    success: false,
-                    message: 'API soap:Envelope not present',
-                    data: result
-                });
-                return;
-            }
-
-            if(!result['soap:Envelope']['soap:Body']){
-                callback({
-                    success: false,
-                    message: 'API soap:Body not present',
-                    data: result
-                });
-                return;
-            }
-
-            if(!result['soap:Envelope']['soap:Body'].GetTrackerDataResponse){
-                callback({
-                    success: false,
-                    message:'API GetTrackerDataResponse not present',
-                    data: result
-                });
-                return;
-            }
-
-            callback({
-                orders: result['soap:Envelope']['soap:Body'].GetTrackerDataResponse.OrderStatuses,
-                query: result['soap:Envelope']['soap:Body'].GetTrackerDataResponse.Query
-            });
-        }
-    );
+module.exports = {
+  byPhone,
+  byId,
 };
+

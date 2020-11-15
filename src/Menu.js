@@ -3,21 +3,22 @@
 const MenuItem = require('./MenuItem');
 const MenuCategory = require('./MenuCategory');
 
-const Menu = function(menuData) {
-  if(!menuData) {
-      menuData={};
-  } else {
-      this.parseMenu(menuData);
+class Menu {
+  constructor(menuData) {
+    if(!menuData) {
+        menuData={};
+    } else {
+        this.parseMenu(menuData);
+    }
+
+    this.menuData = menuData;
   }
 
-  this.menuData = menuData;
-}
-
-Menu.prototype.getRaw = function() {
+  getRaw() {
     return this.menuData;
-}
+  }
 
-Menu.prototype.buildCategories = function(categoryData,parent) {
+  buildCategories(categoryData,parent) {
     var category = new MenuCategory(categoryData,parent);
     for (var subIndex in categoryData.Categories) {
         category.getSubcategories().push(this.buildCategories(categoryData.Categories[subIndex],category));
@@ -32,9 +33,9 @@ Menu.prototype.buildCategories = function(categoryData,parent) {
         product.getCategories().push(category);
     }).bind(this));
     return category;
-}
+  }
 
-Menu.prototype.parseItems = function(parentMenuData,ParseClass) {
+  parseItems(parentMenuData,ParseClass) {
     var items = [];
     Object.keys(parentMenuData).forEach((function(code) {
         var menuData = parentMenuData[code];
@@ -43,9 +44,9 @@ Menu.prototype.parseItems = function(parentMenuData,ParseClass) {
         items.push(obj);
     }).bind(this));
     return items;
-}
+  }
 
-Menu.prototype.parseMenu = function(menuData) {
+  parseMenu(menuData) {
     this.menuByCode = {};
     var products = this.parseItems(menuData.result.Products,MenuItem);
     var coupons = this.parseItems(menuData.result.Coupons,MenuItem);
@@ -56,22 +57,23 @@ Menu.prototype.parseMenu = function(menuData) {
         var categoryData = menuData.result.Categorization[categoryType];
         this.rootCategories[categoryType] = this.buildCategories(categoryData);
     }
-}
+  }
 
-Menu.prototype.getFoodCategory = function() {
+  getFoodCategory() {
     return this.rootCategories["Food"];
-}
+  }
 
-Menu.prototype.getCouponCategory = function() {
+  getCouponCategory() {
     return this.rootCategories["Coupons"];
-}
+  }
 
-Menu.prototype.getPreconfiguredCategory = function() {
+  getPreconfiguredCategory() {
     return this.rootCategories["PreconfiguredProducts"];
-}
+  }
 
-Menu.prototype.getItemByCode = function(code) {
+  getItemByCode(code) {
     return this.menuByCode[code];
+  }
 }
 
 module.exports = Menu;

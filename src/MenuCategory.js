@@ -1,38 +1,40 @@
 'use strict';
 
-
-var MenuCategory = function(menuData,parentCategory) {
+class MenuCategory {
+  constructor(menuData,parentCategory) {
     if(!menuData) menuData={};
 
     this.menuData = menuData;
     this.subcategories = [];
     this.products = [];
     this.parent = parentCategory;
-}
+  }
 
-MenuCategory.prototype.getSubcategories = function() {
+  getSubcategories() {
     return this.subcategories;
-}
+  }
 
-MenuCategory.prototype.getName = function() {
+  getName() {
     return this.menuData.Name;
-}
+  }
 
-MenuCategory.prototype.getDescription = function() {
+  getDescription() {
     return this.menuData.Description;
-}
+  }
 
-MenuCategory.prototype.getCode = function() {
+  getCode() {
     return this.menuData.Code;
-}
+  }
 
-MenuCategory.prototype.getCategoryPath = function() {
-    var result = this.parent !== undefined ? this.parent.getCategoryPath().concat([this.menuData.Code]) : [this.menuData.Code];
-    return result;
-}
+  getCategoryPath() {
+    return this.parent !== undefined
+      ? this.parent.getCategoryPath().concat([this.menuData.Code])
+      : [this.menuData.Code];
+  }
 
-MenuCategory.prototype.getProducts = function() {
+  getProducts() {
     return this.products;
+  }
 }
 
 module.exports = MenuCategory;

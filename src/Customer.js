@@ -1,8 +1,3 @@
-'use strict';
-
-var urls = require('../urls.json');
-var httpJson = require('./http-json');
-
 class Customer {
   constructor(parameters) {
     this.ID = '';

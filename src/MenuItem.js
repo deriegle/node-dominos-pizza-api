@@ -1,31 +1,28 @@
-'use strict';
-
-
-var MenuItem = function(menuData) {
-    if(!menuData) menuData={};
-
-    this.menuData = menuData;
+class MenuItem {
+  constructor(menuData) {
+    this.menuData = menuData || {};
     this.categories = [];
-}
+  }
 
-MenuItem.prototype.setCategories = function(categories) {
+  setCategories(categories) {
     return this.categories = categories;
-}
+  }
 
-MenuItem.prototype.getCategories = function() {
+  getCategories() {
     return this.categories;
-}
+  }
 
-MenuItem.prototype.getName = function() {
+  getName() {
     return this.menuData.Name;
-}
+  }
 
-MenuItem.prototype.getDescription = function() {
+  getDescription() {
     return this.menuData.Description;
-}
+  }
 
-MenuItem.prototype.getCode = function() {
+  getCode() {
     return this.menuData.Code;
+  }
 }
 
 module.exports = MenuItem;

@@ -1,85 +1,85 @@
-'use strict';
+const Menu = require('./Menu.js');
+const fs = require('fs');
+const httpJson = require('./http-json');
+const urls = require('../urls.json');
+const util = require('util');
 
-var httpJson = require('./http-json');
-var urls = require('../urls.json');
-var util=require('util');
-var fs=require('fs');
-var Menu=require('./Menu.js');
+class Store {
+  constructor({ ID }) {
+    this.ID = ID;
+  }
 
-const Store = function(parameters) {
-    this.ID = parameters.ID;
-};
+  async getInfo(callback) {
+    if(!this.ID || !callback) {
+      if(callback) {
+        callback(
+          {
+            success: false,
+            message: 'A callback is required to get store info'
+          }
+        );
+      }
 
-Store.prototype.getInfo = async function(callback) {
-  if(!this.ID || !callback) {
-    if(callback) {
-      callback(
-        {
-          success: false,
-          message: 'A callback is required to get store info'
-        }
-      );
+      return;
     }
 
-    return;
+    await httpJson.get(urls.store.info.replace('${storeID}', this.ID), callback);
   }
 
-  await httpJson.get(urls.store.info.replace('${storeID}', this.ID), callback);
-};
+  async getMenu(callback, lang, noCache) {
+    if (this.cachedMenu && !noCache) {
+        callback(this.cachedMenu); //TODO as below, break compatibility by removing first parameter
+        return;
+    }
 
-Store.prototype.getMenu = async function (callback, lang, noCache) {
-  if (this.cachedMenu && !noCache) {
-      callback(this.cachedMenu); //TODO as below, break compatibility by removing first parameter
+    if( !this.ID || !callback) {
+      if(callback) {
+        callback({
+            success: false,
+            message: 'A callback is required to get a store menu'
+        });
+      }
+
       return;
+    }
+
+    const url = urls.store.menu.replace('${storeID}', this.ID)
+        .replace('${lang}', lang || 'en');
+
+    await httpJson.get(url, (jsonObj) => {
+      this.cachedMenu = new Menu(jsonObj);
+      callback(this.cachedMenu);
+    });
   }
 
-  if( !this.ID || !callback) {
-    if(callback) {
-      callback({
+  async getFriendlyNames(callback, lang) {
+    if(!this.ID || !callback) {
+      if(callback) {
+        callback({
           success: false,
           message: 'A callback is required to get a store menu'
-      });
+        });
+      }
+
+      return;
     }
 
-    return;
-  }
-
-  const url = urls.store.menu.replace('${storeID}', this.ID)
+    const url = urls.store.menu.replace('${storeID}', this.ID)
       .replace('${lang}', lang || 'en');
 
-  await httpJson.get(url, (jsonObj) => {
-    this.cachedMenu = new Menu(jsonObj);
-    callback(this.cachedMenu);
-  });
-};
+    await httpJson.get(url, function(result) {
+      var itemMapping = [];
+      var keys = Object.keys(result.result.Variants);
 
-Store.prototype.getFriendlyNames = async function(callback, lang) {
-  if(!this.ID || !callback) {
-    if(callback) {
-      callback({
-        success: false,
-        message: 'A callback is required to get a store menu'
+      keys.forEach(function(key) {
+        var json = {};
+        json[result.result.Variants[key].Name] = key
+        itemMapping.push(json);
       });
-    }
 
-    return;
-  }
-
-  const url = urls.store.menu.replace('${storeID}', this.ID)
-    .replace('${lang}', lang || 'en');
-
-  await httpJson.get(url, function(result) {
-    var itemMapping = [];
-    var keys = Object.keys(result.result.Variants);
-
-    keys.forEach(function(key) {
-      var json = {};
-      json[result.result.Variants[key].Name] = key
-      itemMapping.push(json);
+      callback({ success: true, result: itemMapping });
     });
-
-    callback({ success: true, result: itemMapping });
-  });
+  }
 }
 
 module.exports = Store;
