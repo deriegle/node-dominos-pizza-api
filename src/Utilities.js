@@ -4,7 +4,7 @@ var httpJson = require('./http-json.js');
 var urls = require('./urls.json');
 var Address = require('./Address.js');
 
-var findNearbyStores = function(address, pickUpType, callback) {
+var findNearbyStores = async function(address, pickUpType, callback) {
     if(typeof pickUpType == 'function'){
         callback=pickUpType;
         pickUpType='Delivery';
@@ -42,7 +42,7 @@ var findNearbyStores = function(address, pickUpType, callback) {
         pickUpType||'Delivery'
     );
 
-    httpJson.get(url, callback);
+  await httpJson.get(url, callback);
 };
 
 module.exports = {
