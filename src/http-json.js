@@ -1,5 +1,5 @@
-var http = require('request');
-var urls = require('./urls.json')
+const http = require('request');
+const urls = require('./urls.json')
 
 module.exports.post = function(url, req, callback) {
     if(typeof req !=  'string')
@@ -46,44 +46,38 @@ module.exports.post = function(url, req, callback) {
   });
 }
 
-module.exports.get = function(url, callback){
-    var requestBody = {
-        uri: url,
-        headers: {
-            'Referer': urls.referer
-        }
-    };
-    http.get(requestBody, function (error, res, body) {
-            if (error){  //If request errored out.
-                callback({
-                    success: false,
-                    message: error
-                });
-                return;
-            }
-            if (res.statusCode !== 200){  //If request didn't error but response isn't status code 200.
-                callback({
-                    success: false,
-                    message: 'HTML Status Code Error ' + res.statusCode
-                });
-                return;
-            }
+module.exports.get = async (url, callback) => {
+  let result;
 
-            try {
-                var parsed = JSON.parse(body);
-            }
-            catch(error){
-              console.log(error);
-              return callback({
-                  success: false,
-                  message: error
-              });
-            }
+  try {
+    result = await fetch(url, {
+      headers: {
+        'Referer': urls.referer,
+      },
+    });
+  } catch (error) {
+    callback({
+      success: false,
+      message: error
+    });
+  }
 
-            return callback({
-                success: true,
-                result: parsed
-            });
-        }
-    );
+  if (!result) {
+    return callback({
+      success: false,
+      message: error
+    });
+  }
+
+  if (result.status !== 200) {  //If request didn't error but response isn't status code 200.
+    return callback({
+      success: false,
+      message: `HTML Status Code Error:  ${result.status}`,
+    });
+  }
+
+  return callback({
+    success: true,
+    result: await result.json(),
+  });
 }

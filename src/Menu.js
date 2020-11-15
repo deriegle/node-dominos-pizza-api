@@ -5,12 +5,13 @@ var MenuCategory = require('./MenuCategory');
 
 
 var Menu = function(menuData) {
-    if(!menuData) {
-        menuData={};
-    } else {
-        this.parseMenu(menuData);
-    }
-    this.menuData = menuData;
+  if(!menuData) {
+      menuData={};
+  } else {
+      this.parseMenu(menuData);
+  }
+
+  this.menuData = menuData;
 }
 
 Menu.prototype.getRaw = function() {
