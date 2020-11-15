@@ -49,13 +49,8 @@ See the examples directory for simple apps and demonstrations on using the basic
 
 Testing
 ====
-Simply run ` npm test `
-if you have issues with this you may want to try installing mocha globally like this : ` npm install -g mocha `
 
--OR for manual testing-
-
-1. Install mocha ` npm install -g mocha `
-1. Run the tests ` mocha `
+Simply run ` npm test ` OR `yarn test`
 
 ---
 
@@ -79,7 +74,6 @@ Set the urls.json file to be:
   },
   "track": "https://trkweb.dominos.ca/orderstorage/GetTrackerData?"
 }
-
 ```
 
 Finding Stores
@@ -97,52 +91,31 @@ Note: the 'address' parameter is passed to the Address class. This means any for
 ***this yields the least accurate information***
 
 ```javascript
+const { Utilities }  = require('dominos');
 
-var pizzapi = require('dominos');
-
-pizzapi.Util.findNearbyStores(
-    '63102',
-    'Delivery',
-    function(storeData){
-        console.log(storeData);
-    }
-);
-
+const storeData = await Utilities.findNearbyStores('63102');
+console.log(storeData);
 ```
 
 ### By City and Postal Code
 ***this yields less accurate information but is better than just using the postal code***
 
 ```javascript
+const { Utilities } = require('dominos');
 
-  var pizzapi = require('dominos');
-
-  pizzapi.Util.findNearbyStores(
-      'St. Louis, MO, 63102',
-      'Delivery',
-      function(storeData){
-          console.log(storeData);
-      }
-  );
+const storeData = await Utilities.findNearbyStores('St. Louis, MO, 63102', 'Carryout');
+console.log(storeData);
 ```
 
 ### Using Full or Nearly Full Address
 ***this yields the best information and sorts stores by actual distance***
 
 ```javascript
+const { Utilities } = require('dominos'); 
 
-  var pizzapi = require('dominos'); 
-
-  pizzapi.Util.findNearbyStores(
-      '700 Clark Ave, St. Louis, MO, 63102',
-      'Delivery',
-      function(storeData){
-          console.log(storeData);
-      }
-  );
-
+const storeData = await Utilities.findNearbyStores('700 Clark Ave, St. Louis, MO, 63102');
+console.log(storeData);
 ```
-
 ---
 
 Store
@@ -153,18 +126,14 @@ Store
 |ID      |Integer|null|true    |
 
 ```javascript
+//Get Store Info for Store #4336
+const { Store } = require('dominos');
 
-  //Get Store Info for Store #4336
-  var pizzapi = require('dominos');
-  var myStore = new pizzapi.Store();
-  myStore.ID=4336;
+const store = new Store();
+store.ID=4336;
 
-  myStore.getInfo(
-      function(storeData){
-          console.log(storeData);
-      }
-  );
-
+const result = await store.getInfo();
+console.log(result);
 ```
 
 ### Store menu
@@ -174,18 +143,12 @@ Store
 |callback|function|null|true   |
 
 ```javascript
+//Get Menu for Store #4336
+const { Store } = require('dominos'); 
+const store = new Store({ ID: 4336 });
 
-  //Get Menu for Store #4336
-  var pizzapi = require('dominos'); 
-  var myStore = new pizzapi.Store();
-  myStore.ID = 4336;
-
-  myStore.getMenu(
-      function(storeData){
-          console.log(storeData);
-      }
-  );
-
+const result = await myStore.getMenu();
+console.log(result);
 ```
 
 ### Store info
@@ -194,18 +157,11 @@ Store
 |callback|function|null|true   |
 
 ```javascript
+const { Store } = require('dominos');
+const store = new Store({ ID: 4336 });
 
-  //Get Info for Store #4336
-  var pizzapi = require('dominos');
-  var myStore = new pizzapi.Store();
-  myStore.ID = 4336;
-
-  myStore.getInfo(
-      function(storeData){
-          console.log(storeData);
-      }
-  );
-
+const result = await store.getInfo();
+console.log(result);
 ```
 
 ### Friendly menu list
@@ -216,18 +172,18 @@ Store
 Returns a list of all items the store offers in an JSON array, formatted {Code: Friendly Name}
 
 ```javascript
+//Get friendly name menu for Store #4336
+const { Store } = require('dominos'); 
 
-  //Get friendly name menu for Store #4336
-  var pizzapi = require('dominos'); 
-  var myStore = new pizzapi.Store();
-  myStore.ID = 4336;
+const store = new Store({ ID: 4336 });
 
-  myStore.getFriendlyNames(
-      function(storeData){
-          console.log(storeData);
-      }
-  );
+const result = await store.getFriendlyNames(
 
+if (result.success) {
+  console.log(result);
+} else {
+  console.error(result.message);
+}
 ```
 
 ---
@@ -242,47 +198,46 @@ The following are examples of the methods:
 
 ```javascript
 
-  var fullAddress = new Address('900 Clark Ave, St. Louis, MO, 63102');
+const fullAddress = new Address('900 Clark Ave, St. Louis, MO, 63102');
 
   //or
 
-  var partAddress = new Address('St. Louis, MO, 63102');
+const partAddress = new Address('St. Louis, MO, 63102');
 
   //or
 
-  var stateAndZip = new Address('St. Louis, 63102');
+const stateAndZip = new Address('St. Louis, 63102');
 
-  //or
+//or
+const cityAndZip = new Address('St. Louis, 63102');
 
-  var cityAndZip = new Address('St. Louis, 63102');
-
-  //only zip
-
-  var onlyZip = new Address('63102');
-
+//only zip
+const onlyZip = new Address('63102');
 ```
 
 #### From JSON
 
 ```javascript
+const { Address } = require('dominos');
 
-  var jsonAddress = new Address(
-      {
-          Street: '900 Clark Ave',
-          City: 'St. Louis',
-          Region: 'MO',
-          PostalCode: 63102
-      }
-  );
+const address = new Address(
+  {
+    Street: '900 Clark Ave',
+    City: 'St. Louis',
+    Region: 'MO',
+    PostalCode: 63102
+  }
+);
 
 ```
 
 #### From array
 
 ```javascript
-
-  var arrayAddress = new Address(['900 Clark Ave', 'St. Louis', 'MO', '63102']);
-
+const address = new Address([
+  '900 Clark Ave',
+  'St. Louis', 'MO', '63102'
+]);
 ```
 
 ---
@@ -301,16 +256,17 @@ Customer
 ---
 
 ```javascript
+const { Customer } = require('dominos');
 
-  var customer = new Customer(
-      {
-          address: someAddressObj,
-          firstName: 'Barack',
-          lastName: 'Obama',
-          phone: '1-800-The-White-House',
-          email: 'br'
-      }
-  )
+const customer = new Customer(
+  {
+    address: someAddressObj,
+    firstName: 'Barack',
+    lastName: 'Obama',
+    phone: '1-800-The-White-House',
+    email: 'br'
+  }
+)
 
 ```
 ---
@@ -326,14 +282,13 @@ You can get the codes from one of the menu requests.
 |options|Array|[]|
 
 ```javascript
+const { Item } = require('dominos');
 
-  var newItem = new Item(
-    {
-        code: '14SCREEN'
-    }
-  );
-  //and so on...
-
+const item = new Item(
+  {
+    code: '14SCREEN'
+  }
+);
 ```
 ---
 
@@ -351,42 +306,38 @@ This is the class that every other class feeds into.
 ### creating an order
 
 ```javascript
+const { Customer, Order } = require('dominos');
 
-  var pizzapi = require('dominos');
+const president = new Customer(
+  {
+    firstName: 'Barack',
+    lastName: 'Obama',
+    address: '1600 Pennsylvania Avenue, Washington, DC',
+    email: 'barack@whitehouse.gov'
+  }
+);
 
-  var thePresident = new pizzapi.Customer(
-      {
-          firstName: 'Barack',
-          lastName: 'Obama',
-          address: '1600 Pennsylvania Avenue, Washington, DC',
-          email: 'barack@whitehouse.gov'
-      }
-  );
+const order = new Order(
+  {
+    customer: president,
+    //optional set the store ID right away
+    storeID: myStore.ID,
+    deliveryMethod: 'Delivery' //(or 'Carryout')
+  }
+);
+```
 
-  var order = new pizzapi.Order(
-      {
-          customer: thePresident,
+**OR**
 
-          //optional set the store ID right away
-          storeID: myStore.ID,
+```javascript
+const { Order } = require('dominos');
 
-          deliveryMethod: 'Delivery' //(or 'Carryout')
-      }
-  );
-
-  //or
-
-  var order = new pizzapi.Order();
-
-  order.FirstName = data;
-  order.LastName = data;
-  order.Email = data;
-  order.Phone = data;
-
-  //and if you want to update the store id just :
-
-  order.StoreID = myStore.ID;
-
+const order = new Order();
+order.FirstName = data;
+order.LastName = data;
+order.Email = data;
+order.Phone = data;
+order.StoreID = myStore.ID;
 ```
 
 ### duplicating an order
@@ -416,16 +367,17 @@ This is the class that every other class feeds into.
 ### Adding a product to the order :
 
 ```javascript
+const { Item } = require('dominos');
 
-  order.addItem(
-      new pizzapi.Item(
-          {
-              code: '14SCREEN',
-              options: [],
-              quantity: 1
-          }
-      )
-  );
+order.addItem(
+  new Item(
+    {
+      code: '14SCREEN',
+      options: [],
+      quantity: 1
+    }
+  )
+);
 
 ```
 
@@ -433,25 +385,15 @@ This is the class that every other class feeds into.
 This step is **Strongly** recommended
 
 ```javascript
-
-  order.validate(
-      function(result) {
-          console.log("We did it!");
-      }
-  );
-
+const result = await order.validate();
+console.log(result);
 ```
 
 ### Price an Order
 
 ```javascript
-
-  order.price(
-      function(result) {
-          console.log("Price!")
-      }
-  );
-
+const result = await order.price();
+console.log(result);
 ```
 
 ### Place an Order
@@ -461,27 +403,23 @@ At least one item must've been added to place an order.
 You don't have to do anything for the payment, Domino's Pizza will handle all transactions.
 
 ```javascript
+const dominos = require('dominos');
 
-  var pizzapi = require('dominos');
+const cardNumber = '4100123422343234';
 
-  var cardNumber = '4100123422343234';
+const main = async () => {
+  order.addPaymentInformation({
+    amount: order.Amounts.Customer,
+    cardNumber: cardNumber,
+    expiration: '0115', // 01/15 just the numbers "01/15".replace(/\D/g, '');
+    securityCode: '777', 
+    postalCode: '90210', // Billing Zipcode
+  });
 
-  var cardInfo = new order.PaymentObject();
-  cardInfo.Amount = order.Amounts.Customer;
-  cardInfo.Number = cardNumber;
-  cardInfo.CardType = order.validateCC(cardNumber);
-  cardInfo.Expiration = '0115';//  01/15 just the numbers "01/15".replace(/\D/g,'');
-  cardInfo.SecurityCode = '777';
-  cardInfo.PostalCode = '90210'; // Billing Zipcode
+  await order.place();
 
-  order.Payments.push(cardInfo);
-
-  order.place(
-      function(result) {
-          console.log("Order placed!");
-      }
-  );
-
+  console.log('Order placed!');
+};
 ```
 
 ---
@@ -497,16 +435,17 @@ Tracking
 |callback|function to pass the api result to|null|true|
 
 ```javascript
+const dominos = require('dominos'); 
 
-  var pizzapi = require('dominos'); 
+const main = async () => {
+  const result = await dominos.Track.byPhone(2024561111);
 
-  pizzapi.Track.byPhone(
-      2024561111,
-      function(pizzaData){
-          console.log(pizzaData);
-      }
-  );
-
+  if (result.success) {
+    console.log(result);
+  } else {
+    console.error(result.message);
+  }
+}
 ```
 
 ### By orderKey
@@ -518,16 +457,17 @@ Tracking
 |callback|function to pass the api result to|null|true|
 
 ```javascript
+  const dominos = require('dominos'); 
 
-  var pizzapi = require('dominos'); 
+  const main = async () => {
+    const result = await dominos.Track.byId(123456, 12345);
 
-  pizzapi.Track.byId(
-      123456,
-      12345,
-      function(pizzaData){
-          console.log(pizzaData)
-      }
-  );
+    if (result.success) {
+      console.log(result);
+    } else {
+      console.error(result.message);
+    }
+  }
 
 ```
 

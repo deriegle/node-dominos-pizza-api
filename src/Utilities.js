@@ -1,29 +1,23 @@
 const httpJson = require('./http-json.js');
-const urls = require('../urls.json');
+const urls = require('./urls');
 const Address = require('./Address.js');
 
+const validPickUpTypes = ['Delivery', 'Carryout', 'all'];
+
 class Utilities {
-  static async findNearbyStores(address, pickUpType, callback) {
-    if (typeof pickUpType === 'function') {
-      callback = pickUpType;
-      pickUpType = 'Delivery';
+  static async findNearbyStores(address, pickUpType = 'Delivery') {
+    if (!validPickUpTypes.includes(pickUpType)) {
+      return {
+        success: false,
+        message: `${pickUpType} is not a valid pick up type. Please use one of ${validPickUpTypes.join(', ')}`,
+      };
     }
 
-    if (!address || !callback) {
-      if (!callback) {
-        throw('invalid findNearbyStores request. address and callback are required at a minimum.');
-      }
-
-      if (callback) {
-        callback(
-          {
-            success: false,
-            message: 'At least a partial address (minimum accepted is zipcode) is required to find stores'
-          }
-        );
-      }
-
-      return false;
+    if (!address) {
+      return {
+        success: false,
+        message: 'At least a partial address (minimum accepted is zipcode) is required to find stores'
+      };
     }
 
     address = new Address(address)
@@ -34,7 +28,7 @@ class Utilities {
       .replace('${line2}', encodeURI( addressLines.line2))
       .replace('${type}', pickUpType || 'Delivery');
 
-    callback(await httpJson.get(url));
+    return await httpJson.get(url);
   }
 }
 

@@ -1,5 +1,5 @@
 const http = require('request');
-const urls = require('../urls.json')
+const urls = require('./urls')
 
 const post = async (url, body) => {
   let result;

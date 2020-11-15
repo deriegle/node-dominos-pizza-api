@@ -1,4 +1,4 @@
-const urls = require('../urls.json');
+const urls = require('./urls');
 const parser = require('xml2json');
 
 class Track {

@@ -1,261 +1,197 @@
-'use strict';
+const urls = require('./urls');
+const httpJson = require('./http-json');
+const PaymentObject = require('./PaymentObject');
 
-var urls = require('../urls.json');
-var httpJson = require('./http-json');
+class Order {
+  constructor(parameters = {}) {
+    //default order
+    this.Address = '';
+    this.Coupons = [];
+    this.CustomerID = '';
+    this.Email = '';
+    this.Extension = '';
+    this.FirstName = '';
+    this.LastName = '';
+    this.LanguageCode = 'en';
+    this.OrderChannel = 'OLO';
+    this.OrderID = '';
+    this.OrderMethod = 'Web';
+    this.OrderTaker = null;
+    this.Payments = [];
+    this.Phone = '';
+    this.Products = [];
+    this.Market = '';
+    this.Currency = '';
+    this.ServiceMethod = parameters.deliveryMethod || 'Delivery';
+    this.SourceOrganizationURI = urls.sourceUri;
+    this.StoreID = parameters.storeID||'';
+    this.Tags = {};
+    this.Version = '1.0';
+    this.NoCombine = true;
+    this.Partners = {};
+    this.NewUser = true;
+    this.metaData = {};
+    this.Amounts = {};
+    this.BusinessDate = '';
+    this.EstimatedWaitMinutes = '';
+    this.PriceOrderTime = '';
+    this.AmountsBreakdown;
 
-var Order = function(parameters) {
-  if(!parameters){
-      parameters={}
+    if (parameters.customer) {
+      const Customer = parameters.customer;
+
+      this.Address = Customer.address;
+      this.CustomerID = Customer.ID;
+      this.Email = Customer.email;
+      this.FirstName = Customer.firstName;
+      this.LastName = Customer.lastName;
+      this.Phone = Customer.phone;
+
+      return this;
+    }
+
+    if (parameters.Order || parameters.order) { 
+      //Used to initialize order object from Dominos results (Also handy for initializing from DB)
+      const previousOrder = parameters.Order;
+      const Customer = parameters.customer;
+
+      this.Address = getField(Customer, previousOrder, 'address', 'Address');
+      this.CustomerID = getField(Customer, previousOrder, 'ID', 'CustomerID');
+      this.Email = getField(Customer, previousOrder, 'email', 'Email');
+      this.FirstName = getField(Customer, previousOrder, 'firstName', 'FirstName');
+      this.LastName = getField(Customer, previousOrder, 'lastName', 'LastName');
+
+      this.OrderID = previousOrder.OrderID;
+      this.Products = previousOrder.Products;
+      this.Market = previousOrder.Market;
+      this.Currency = previousOrder.Currency;
+      this.StoreID = previousOrder.StoreID;
+      this.Amounts = previousOrder.Amounts || {};
+      this.BusinessDate = previousOrder.BusinessDate || '';
+      this.EstimatedWaitMinutes = previousOrder.EstimatedWaitMinutes || '';
+      this.PriceOrderTime = previousOrder.PriceOrderTime || '';
+      this.AmountsBreakdown = previousOrder.AmountsBreakdown || {};
+
+      return this;
+    }
   }
-  //default order
-  this.Address = '';
-  this.Coupons = [];
-  this.CustomerID = '';
-  this.Email = '';
-  this.Extension = '';
-  this.FirstName = '';
-  this.LastName = '';
-  this.LanguageCode = 'en';
-  this.OrderChannel = 'OLO';
-  this.OrderID = '';
-  this.OrderMethod = 'Web';
-  this.OrderTaker = null;
-  this.Payments = [];
-  this.Phone = '';
-  this.Products = [];
-  this.Market = '';
-  this.Currency = '';
-  this.ServiceMethod = parameters.deliveryMethod || 'Delivery';
-  this.SourceOrganizationURI = urls.sourceUri;
-  this.StoreID = parameters.storeID||'';
-  this.Tags = {};
-  this.Version = '1.0';
-  this.NoCombine = true;
-  this.Partners = {};
-  this.NewUser = true;
-  this.metaData = {};
-  this.Amounts = {};
-  this.BusinessDate = '';
-  this.EstimatedWaitMinutes = '';
-  this.PriceOrderTime = '';
-  this.AmountsBreakdown;
 
-  if(parameters['customer']) {
-    var Customer = parameters.customer;
-
-    this.Address = Customer.address;
-    this.CustomerID = Customer.ID;
-    this.Email = Customer.email;
-    this.FirstName = Customer.firstName;
-    this.LastName = Customer.lastName;
-    this.Phone = Customer.phone;
-    return this;
-  }
-  if(parameters['Order'] || parameters['order']) {  //Used to initialize order object from Dominos results (Also handy for initializing from DB)
-    var prevOrder = parameters.Order;
-    var Customer = parameters.customer;
-
-    this.Address = (Customer)? (
-        (Customer.address)? Customer.address : prevOrder.Address
-    ):prevOrder.Address;
-
-    this.CustomerID = (Customer)? (
-        (Customer.address)? Customer.ID : prevOrder.CustomerID
-    ):prevOrder.CustomerID;
-
-    this.Email = (Customer)? (
-        (Customer.address)? Customer.email : prevOrder.Email
-    ):prevOrder.Email;
-
-    this.FirstName = (Customer)? (
-        (Customer.address)? Customer.firstName : prevOrder.FirstName
-    ):prevOrder.FirstName;
-
-    this.LastName = (Customer)? (
-        (Customer.address)? Customer.lastName : prevOrder.LastName
-    ):prevOrder.LastName;
-
-    this.OrderID = prevOrder.OrderID;
-    this.Products = prevOrder.Products;
-    this.Market = prevOrder.Market;
-    this.Currency = prevOrder.Currency;
-    this.StoreID = prevOrder.StoreID;
-    this.Amounts = prevOrder.Amounts || {};
-    this.BusinessDate = prevOrder.BusinessDate || '';
-    this.EstimatedWaitMinutes = prevOrder.EstimatedWaitMinutes || '';
-    this.PriceOrderTime = prevOrder.PriceOrderTime || '';
-    this.AmountsBreakdown = prevOrder.AmountsBreakdown || {};
-
-    return this;
-  }
-};
-
-Order.prototype.addCoupon = function(Coupon) { //Add coupon to Order
+  addCoupon(Coupon) {
     this.Coupons.push(Coupon)
-};
-
-Order.prototype.removeCoupon = function(Coupon) { //Remove coupon from Order
-    var index = this.Coupons.indexOf(Coupon);
-    if (index != -1) {
-        this.Coupons.splice(index, 1);
-    }
-};
-
-Order.prototype.addItem = function(Item) { //Add product to Order
-    this.Products.push(Item)
-};
-
-Order.prototype.removeItem = function(Item) {  //Remove product from Order
-  var index = this.Products.indexOf(Item);
-  if(index != -1) {
-    this.Products.splice(index, 1);
   }
-};
 
-Order.prototype.validate = function(callback) {  //Validate Order
-  if(!this.Products || !callback) {
-    if(callback) {
-      callback({
+  removeCoupon(Coupon) {
+    const index = this.Coupons.indexOf(Coupon);
+
+    if (index !== -1) {
+      this.Coupons.splice(index, 1);
+    }
+  }
+
+  // Add product to Order
+  addItem(product) {
+    this.Products.push(product)
+  }
+
+  // Remove product from Order 
+  removeItem(item) {
+    const index = this.Products.indexOf(item);
+
+    if(index !== -1) {
+      this.Products.splice(index, 1);
+    }
+  }
+
+  async validate() {
+    if(!this.Products) {
+      return {
         success: false,
         message: 'At least one Item must be added!'
-      });
+      };
     }
-    return;
+
+    //Blame Dominos, this isn't my doing.
+    const stringified = JSON.stringify({
+      'Order' : this
+    });
+
+    const response = await httpJson.post(urls.order.validate, stringified);
+    return this.mergeResponse(response);
   }
 
-  //Blame Dominos, this isn't my doing.
-  var stringified = JSON.stringify({
-    'Order' : this
-  });
-
-  const response = await httpJson.post(urls.order.validate, stringified);
-  this.mergeResponse(callback, response);
-};
-
-Order.prototype.price = function(callback) {
-  if(!this.Products || !callback) {
-    if(callback) {
-      callback({
+  async price() {
+    if(!this.Products) {
+      return {
         success: false,
         message: 'At least one Item must be added!'
-      });
+      };
     }
-    return;
+
+    const stringified = JSON.stringify({
+      'Order' : this
+    });
+
+    const response = await httpJson.post(urls.order.price, stringified);
+    return this.mergeResponse(response);
   }
 
-  const stringified = JSON.stringify({
-    'Order' : this
-  });
+  async place() {
+    if(!this.Products) {
+      return {
+        success: false,
+        message: 'At least one product must be added!'
+      };
+    }
 
-  const response = await httpJson.post(urls.order.price, stringified);
-  this.mergeResponse(callback, response);
-};
+    const stringified = JSON.stringify({
+      'Order' : this
+    });
 
-Order.prototype.place = async function(callback) {
-  if(!this.Products || !callback) {
-      if(callback) {
-          callback({
-              success: false,
-              message: 'At least one product must be added!'
-          })
-      }
+    return httpJson.post(urls.order.place, stringified);
   }
 
-  var stringified = JSON.stringify({
-    'Order' : this
-  });
-
-  callback(await httpJson.post(urls.order.place, stringified));
-};
-
-Order.prototype.mergeResponse = function(callback,response){
+  mergeResponse(response) {
     for(var key in response.result.Order){
-        if(Array.isArray(response.result.Order[key]) && !response.result.Order[key].length){
-            continue;
-        }
-        this[key]=response.result.Order[key];
+      if (Array.isArray(response.result.Order[key]) && !response.result.Order[key].length) {
+        continue;
+      }
+
+      this[key] = response.result.Order[key];
     }
-    if(callback){
-        callback(response);
-    }
+
+    return response;
+  }
+
+  addPaymentInformation({
+    amount,
+    cardNumber,
+    cardType,
+    expiration,
+    securityCode,
+    postalCode
+  } = {}) {
+    const paymentObject = new PaymentObject();
+
+    paymentObject.Amount = amount || 0;
+    paymentObject.Number = cardNumber || "";
+    paymentObject.CardType = cardType || "";
+    paymentObject.Expiration = expiration || "";
+    paymentObject.SecurityCode = securityCode || "";
+    paymentObject.PostalCode = postalCode || "";
+
+    this.Payments.push(paymentObject);
+  }
 }
 
-Order.prototype.validateCC=function(number){
-    var re = {
-        visa        : /^4[0-9]{12}(?:[0-9]{3})?$/,
-        mastercard  : /^5[1-5][0-9]{14}$/,
-        amex        : /^3[47][0-9]{13}$/,
-        diners      : /^3(?:0[0-5]|[68][0-9])[0-9]{11}$/,
-        discover    : /^6(?:011|5[0-9]{2})[0-9]{12}$/,
-        jcb         : /^(?:2131|1800|35\d{3})\d{11}$/,
-        enroute     : /^(?:2014|2149)\d{11}$/
-    };
+const getField = (customer, previousOrder, customerKey, orderKey) => {
+  if (customer)  {
+    return customer[customerKey]
+      ? customer[customerKey]
+      : previousOrder[orderKey];
+  }
 
-    if (re.visa.test(number))
-        return 'VISA';
-
-    if (re.mastercard.test(number))
-        return 'MASTERCARD';
-
-    if (re.amex.test(number))
-        return 'AMEX';
-
-    if (re.diners.test(number))
-        return 'DINERS';
-
-    if (re.discover.test(number))
-        return 'DISCOVER';
-
-    if (re.jcb.test(number))
-        return 'JCB';
-
-    if (re.enroute.test(number))
-        return 'JCB';
-
-    return "";
+  return previousOrder[orderKey];
 }
 
-Order.prototype.PaymentObject=function(){
-    Object.defineProperties(
-        this,
-        {
-            "Type": {
-                writable:false,
-                enumerable:true,
-                value:"CreditCard"
-            },
-            "Amount":  {
-                writable:true,
-                enumerable:true,
-                value:0
-            },
-            "Number":  {
-                writable:true,
-                enumerable:true,
-                value:""
-            },
-            "CardType":  {
-                writable:true,
-                enumerable:true,
-                value:""//uppercase
-            },
-            "Expiration":  {
-                writable:true,
-                enumerable:true,
-                value:""//digits only
-            },
-            "SecurityCode":  {
-                writable:true,
-                enumerable:true,
-                value:""
-            },
-            "PostalCode":  {
-                writable:true,
-                enumerable:true,
-                value:""
-            }
-        }
-    );
-}
 
 module.exports = Order;

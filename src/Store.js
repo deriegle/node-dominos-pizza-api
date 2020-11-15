@@ -1,65 +1,51 @@
 const Menu = require('./Menu.js');
 const fs = require('fs');
 const httpJson = require('./http-json');
-const urls = require('../urls.json');
+const urls = require('./urls');
 
 class Store {
-  constructor({ ID }) {
+  constructor({ ID } = {}) {
     this.ID = ID;
   }
 
-  async getInfo(callback) {
-    if(!this.ID || !callback) {
-      if(callback) {
-        callback(
-          {
-            success: false,
-            message: 'A callback is required to get store info'
-          }
-        );
-      }
-
-      return;
+  async getInfo() {
+    if(!this.ID) {
+      return {
+        success: false,
+        message: 'A callback is required to get store info'
+      };
     }
 
-    callback(await httpJson.get(urls.store.info.replace('${storeID}', this.ID)));
+    return await httpJson.get(urls.store.info.replace('${storeID}', this.ID));
   }
 
-  async getMenu(callback, lang, noCache) {
+  async getMenu(lang, noCache) {
     if (this.cachedMenu && !noCache) {
-        callback(this.cachedMenu); //TODO as below, break compatibility by removing first parameter
-        return;
+        return this.cachedMenu; //TODO as below, break compatibility by removing first parameter
     }
 
-    if( !this.ID || !callback) {
-      if(callback) {
-        callback({
-            success: false,
-            message: 'A callback is required to get a store menu'
-        });
-      }
-
-      return;
+    if (!this.ID) {
+      return {
+        success: false,
+        message: 'A callback is required to get a store menu'
+      };
     }
 
-    const url = urls.store.menu.replace('${storeID}', this.ID)
-        .replace('${lang}', lang || 'en');
+    const url = urls.store.menu
+      .replace('${storeID}', this.ID)
+      .replace('${lang}', lang || 'en');
 
     const jsonObj = await httpJson.get(url);
     this.cachedMenu = new Menu(jsonObj);
-    callback(this.cachedMenu);
+    return this.cachedMenu;
   }
 
-  async getFriendlyNames(callback, lang) {
-    if(!this.ID || !callback) {
-      if(callback) {
-        callback({
-          success: false,
-          message: 'A callback is required to get a store menu'
-        });
-      }
-
-      return;
+  async getFriendlyNames(lang) {
+    if (!this.ID) {
+      return {
+        success: false,
+        message: 'A callback is required to get a store menu'
+      };
     }
 
     const url = urls.store.menu.replace('${storeID}', this.ID)
@@ -75,7 +61,10 @@ class Store {
       itemMapping.push(json);
     });
 
-    callback({ success: true, result: itemMapping });
+    return {
+      success: true,
+      result: itemMapping,
+    };
   }
 }
 
