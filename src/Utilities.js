@@ -1,7 +1,7 @@
 'use strict';
 
 var httpJson = require('./http-json.js');
-var urls = require('./urls.json');
+var urls = require('../urls.json');
 var Address = require('./Address.js');
 
 var findNearbyStores = async function(address, pickUpType, callback) {

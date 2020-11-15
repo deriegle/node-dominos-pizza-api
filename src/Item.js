@@ -1,7 +1,5 @@
-'use strict';
-
-
-var Item = function(parameters) {
+class Item {
+  constructor(parameters) {
     if(!parameters){
         parameters={}
     }
@@ -20,6 +18,7 @@ var Item = function(parameters) {
             this.Options[parameters.options[i]] = { '1/1': '1' };
         }
     }
+  }
 }
 
 module.exports = Item;

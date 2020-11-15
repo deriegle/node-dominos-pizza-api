@@ -1,6 +1,6 @@
 'use strict';
 
-var urls = require('./urls.json');
+var urls = require('../urls.json');
 var httpJson = require('./http-json');
 var util=require('util');
 

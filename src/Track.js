@@ -1,6 +1,6 @@
 'use strict';
 
-var urls = require('./urls.json');
+var urls = require('../urls.json');
 var request = require('request');
 var parser = require('xml2json');
 

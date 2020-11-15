@@ -1,7 +1,7 @@
 'use strict';
 
 var httpJson = require('./http-json');
-var urls = require('./urls.json');
+var urls = require('../urls.json');
 var util=require('util');
 var fs=require('fs');
 var Menu=require('./Menu.js');

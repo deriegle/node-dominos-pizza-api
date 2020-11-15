@@ -1,5 +1,5 @@
 const http = require('request');
-const urls = require('./urls.json')
+const urls = require('../urls.json')
 
 module.exports.post = function(url, req, callback) {
     if(typeof req !=  'string')
