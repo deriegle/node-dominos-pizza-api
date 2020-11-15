@@ -1,0 +1,347 @@
+{
+  "StoreID": "9760",
+  "BusinessDate": "2020-11-15",
+  "PulseVersion": "6.89.477",
+  "PulseVersionName": "3.89",
+  "PreferredLanguage": "en-US",
+  "PreferredCurrency": "USD",
+  "Phone": "614-826-6888",
+  "StreetName": "2185 Riverside Dr",
+  "City": "Upper Arlington",
+  "Region": "OH",
+  "PostalCode": "43221",
+  "AddressDescription": "2185 Riverside Dr\nUpper Arlington, OH 43221\n",
+  "TimeZoneCode": "GMT-05:00",
+  "TimeZoneMinutes": -300,
+  "IsAVSEnabled": true,
+  "IsCookingInstructionsEnabled": false,
+  "IsSaltWarningEnabled": false,
+  "IsAffectedByDaylightSavingsTime": false,
+  "Upsell": {},
+  "Holidays": {},
+  "HolidaysDescription": "",
+  "Hours": {
+    "Sun": [
+      {
+        "OpenTime": "00:00",
+        "CloseTime": "00:59"
+      },
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ],
+    "Mon": [
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ],
+    "Tue": [
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ],
+    "Wed": [
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ],
+    "Thu": [
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ],
+    "Fri": [
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ],
+    "Sat": [
+      {
+        "OpenTime": "00:00",
+        "CloseTime": "00:59"
+      },
+      {
+        "OpenTime": "10:00",
+        "CloseTime": "23:59"
+      }
+    ]
+  },
+  "HoursDescription": "Su-Th 10:00am-12:00am\nFr-Sa 10:00am-1:00am",
+  "ServiceHours": {
+    "Carryout": {
+      "Sun": [
+        {
+          "OpenTime": "00:00",
+          "CloseTime": "00:59"
+        },
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Mon": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Tue": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Wed": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Thu": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Fri": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Sat": [
+        {
+          "OpenTime": "00:00",
+          "CloseTime": "00:59"
+        },
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ]
+    },
+    "Delivery": {
+      "Sun": [
+        {
+          "OpenTime": "00:00",
+          "CloseTime": "00:59"
+        },
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Mon": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Tue": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Wed": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Thu": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Fri": [
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ],
+      "Sat": [
+        {
+          "OpenTime": "00:00",
+          "CloseTime": "00:59"
+        },
+        {
+          "OpenTime": "10:00",
+          "CloseTime": "23:59"
+        }
+      ]
+    },
+    "DriveUpCarryout": {
+      "Sun": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ],
+      "Mon": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ],
+      "Tue": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ],
+      "Wed": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ],
+      "Thu": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ],
+      "Fri": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ],
+      "Sat": [
+        {
+          "OpenTime": "16:00",
+          "CloseTime": "21:00"
+        }
+      ]
+    }
+  },
+  "ServiceHoursDescription": {
+    "Carryout": "Su-Th 10:00am-12:00am\nFr-Sa 10:00am-1:00am",
+    "Delivery": "Su-Th 10:00am-12:00am\nFr-Sa 10:00am-1:00am",
+    "DriveUpCarryout": "Su-Sa 4:00pm-9:00pm"
+  },
+  "AcceptablePaymentTypes": [
+    "Cash",
+    "GiftCard",
+    "CreditCard"
+  ],
+  "AcceptableTipPaymentTypes": [
+    "CreditCard"
+  ],
+  "AcceptableCreditCards": [
+    "American Express",
+    "Discover Card",
+    "Mastercard",
+    "Optima",
+    "Visa"
+  ],
+  "AcceptableWalletTypes": [
+    "Google"
+  ],
+  "IsOnlineCapable": true,
+  "SocialReviewLinks": {
+    "yelp": "http://www.yelp.com/",
+    "gmb": "http://search.google.com/local/writereview?placeid=ChIJCzAYMyCOOIgRkFSPkTSyob8",
+    "plus": "https://plus.google.com/"
+  },
+  "MinimumDeliveryOrderAmount": 13.98,
+  "EstimatedWaitMinutes": "23-33",
+  "CashLimit": 50,
+  "IsForceOffline": false,
+  "IsOnlineNow": true,
+  "IsForceClose": false,
+  "IsOpen": true,
+  "OnlineStatusCode": "Ok",
+  "StoreAsOfTime": "2020-11-15 13:09:55",
+  "AsOfTime": "2020-11-15 13:11:06",
+  "AllowCarryoutOrders": true,
+  "AllowDeliveryOrders": true,
+  "AllowDineInOrders": false,
+  "Pop": true,
+  "CustomerCloseWarningMinutes": 30,
+  "LanguageLocationInfo": {
+    "en": ""
+  },
+  "LanguageTranslations": {
+    "en": {
+      "LocationInfo": "",
+      "StoreName": ""
+    }
+  },
+  "StoreName": "",
+  "StoreCoordinates": {
+    "StoreLatitude": "39.999331",
+    "StoreLongitude": "-83.076016"
+  },
+  "StoreLocation": {
+    "Latitude": "39.999331",
+    "Longitude": "-83.076016"
+  },
+  "DriverTrackingSupported": "true",
+  "DriverTrackingSupportMode": "NOLO_VISIBLE",
+  "LocationInfo": "",
+  "IsNEONow": false,
+  "IsSpanish": true,
+  "Status": 0,
+  "FutureOrderDelayInHours": 1,
+  "FutureOrderBlackoutBusinessDate": "2020-11-15",
+  "StoreEndTimeEvenSpansToNextBusinessDay": "2020-11-15 23:59:00",
+  "ecomActive": true,
+  "AllowSmsNotification": true,
+  "HasKiosk": false,
+  "IsTippingAllowedAtCheckout": true,
+  "AlternatePaymentProcess": false,
+  "AcceptAnonymousCreditCards": true,
+  "Tokenization": true,
+  "AcceptGiftCards": true,
+  "AcceptSavedCreditCard": true,
+  "AllowCardSaving": true,
+  "IsAllergenWarningEnabled": false,
+  "AllowPickupWindowOrders": false,
+  "AllowAutonomousDelivery": false,
+  "AllowDriverPooling": false,
+  "AdvDelDash": false,
+  "SaltWarningInfo": null,
+  "MarketPaymentTypes": [],
+  "CarryoutWaitTimeReason": null,
+  "DeliveryWaitTimeReason": null,
+  "RawPaymentGateway": "1",
+  "AllowDuc": true,
+  "AllowRemoteDispatch": false,
+  "AllowPiePass": true,
+  "IsDriverSafetyEnabled": false,
+  "StoreVariance": null,
+  "ContactlessDelivery": "REQUIRED",
+  "ContactlessCarryout": "INSTRUCTION",
+  "AllowDynamicDeliveryFees": false,
+  "SmartRunEnabled": false,
+  "RequireMaskInStore": false,
+  "AllowHotspotLiteOrders": false,
+  "TargetedOffers": {
+    "OptInAAA": true,
+    "OptInCOBB": true
+  },
+  "NoCarryoutOrdersUntil": "2000-01-01 00:00:00",
+  "NoDeliveryOrdersUntil": "2020-10-19 10:30:00",
+  "NoHotspotLiteOrdersUntil": "2100-01-01 00:00:00",
+  "GeofenceRadiusMeters": 100,
+  "CarsideTippingEnabled": false,
+  "ServiceMethodEstimatedWaitMinutes": {
+    "Delivery": {
+      "Min": 23,
+      "Max": 33
+    },
+    "Carryout": {
+      "Min": 11,
+      "Max": 16
+    }
+  }
+}
