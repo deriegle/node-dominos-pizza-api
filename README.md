@@ -57,23 +57,12 @@ Simply run ` npm test ` OR `yarn test`
 For Canada
 ====
 
-Set the urls.json file to be:
-```
-{
-  "referer":"https://order.dominos.ca/en/pages/order/",
-  "sourceUri":"order.dominos.ca",
-  "store": {
-    "find": "https://order.dominos.ca/power/store-locator?s=${line1}&c=${line2}&type=${type}",
-    "info": "https://order.dominos.ca/power/store/${storeID}/profile",
-    "menu": "https://order.dominos.ca/power/store/${storeID}/menu?lang=${lang}&structured=true"
-  },
-  "order": {
-    "validate": "https://order.dominos.ca/power/validate-order",
-    "price": "https://order.dominos.ca/power/price-order",
-    "place": "https://order.dominos.ca/power/place-order"
-  },
-  "track": "https://trkweb.dominos.ca/orderstorage/GetTrackerData?"
-}
+Run the script using CANADA=true
+
+For example:
+
+```bash
+CANADA=true node index.js
 ```
 
 Finding Stores
@@ -130,7 +119,7 @@ Store
 const { Store } = require('dominos');
 
 const store = new Store();
-store.ID=4336;
+store.ID = 4336;
 
 const result = await store.getInfo();
 console.log(result);
