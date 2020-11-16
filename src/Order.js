@@ -116,7 +116,7 @@ class Order {
     });
 
     const response = await httpJson.post(urls.order.validate, stringified);
-    return this.mergeResponse(response);
+    return this._mergeResponse(response);
   }
 
   async price() {
@@ -132,7 +132,7 @@ class Order {
     });
 
     const response = await httpJson.post(urls.order.price, stringified);
-    return this.mergeResponse(response);
+    return this._mergeResponse(response);
   }
 
   async place() {
@@ -150,7 +150,7 @@ class Order {
     return httpJson.post(urls.order.place, stringified);
   }
 
-  mergeResponse(response) {
+  _mergeResponse(response) {
     for(var key in response.result.Order){
       if (Array.isArray(response.result.Order[key]) && !response.result.Order[key].length) {
         continue;
@@ -165,7 +165,6 @@ class Order {
   addPaymentInformation({
     amount,
     cardNumber,
-    cardType,
     expiration,
     securityCode,
     postalCode
@@ -174,7 +173,6 @@ class Order {
 
     paymentObject.Amount = amount || 0;
     paymentObject.Number = cardNumber || "";
-    paymentObject.CardType = cardType || "";
     paymentObject.Expiration = expiration || "";
     paymentObject.SecurityCode = securityCode || "";
     paymentObject.PostalCode = postalCode || "";
