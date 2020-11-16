@@ -2,7 +2,6 @@ class PaymentObject {
   constructor() {
     this.Amount = 0;
     this.Number = "";
-    this.CardType = "";
     this.Expiration = "";
     this.SecurityCode = '';
     this.PostalCode = '';
