@@ -1,4 +1,4 @@
-const util = require('../Utilities');
+const Utilities = require('../Utilities');
 const fetchMock = require('fetch-mock');
 
 describe('Utilities', () => {
@@ -10,10 +10,10 @@ describe('Utilities', () => {
         Stores: [{}]
       });
 
-      await util.findNearbyStores('900 Clark Ave, St. Louis, MO, 63102', 'Delivery', (result) => {
-        expect(result).toBeDefined();
-        expect(result.result.Stores.length).toBeGreaterThan(0);
-      });
+      const result = await Utilities.findNearbyStores('900 Clark Ave, St. Louis, MO, 63102', 'Delivery');
+
+      expect(result).toBeDefined();
+      expect(result.result.Stores.length).toBeGreaterThan(0);
     });
 
     it('should find nearby stores that carryout', async () => {
@@ -23,10 +23,10 @@ describe('Utilities', () => {
         Stores: [{}]
       });
 
-      await util.findNearbyStores('900 Clark Ave, St. Louis, MO, 63102', 'Carryout', (result) => {
-        expect(result).toBeDefined();
-        expect(result.result.Stores.length).toBeGreaterThan(0);
-      });
+      const result = await Utilities.findNearbyStores('900 Clark Ave, St. Louis, MO, 63102', 'Carryout');
+
+      expect(result).toBeDefined();
+      expect(result.result.Stores.length).toBeGreaterThan(0);
     });
   });
 });

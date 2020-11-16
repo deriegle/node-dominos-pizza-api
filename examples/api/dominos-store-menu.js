@@ -1,6 +1,5 @@
 const { Store } = require('../../index');
 
-
 function printCategory(category,depth) {
   if (!depth) depth = 0;
 

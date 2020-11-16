@@ -1,6 +1,6 @@
-const httpJson = require('./http-json.js');
+const httpJson = require('./http-json');
 const urls = require('./urls');
-const Address = require('./Address.js');
+const Address = require('./Address');
 
 const validPickUpTypes = ['Delivery', 'Carryout', 'all'];
 

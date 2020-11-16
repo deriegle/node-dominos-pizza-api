@@ -15,19 +15,18 @@ describe('Menu', () => {
 
       const store = new Store({ID: storeID});
 
-      await store.getMenu((menu) => {
-        expect(fetchMock.called()).toBe(true);
-        expect(menu).not.toBeNull();
+      const menu = await store.getMenu();
+      //expect(fetchMock.called()).toBe(true);
+      expect(menu).not.toBeNull();
 
-        expect(menu.getFoodCategory()).not.toBeNull();
-        expect(menu.getCouponCategory()).not.toBeNull();
-        expect(menu.getPreconfiguredCategory()).not.toBeNull();
+      expect(menu.getFoodCategory()).not.toBeNull();
+      expect(menu.getCouponCategory()).not.toBeNull();
+      expect(menu.getPreconfiguredCategory()).not.toBeNull();
 
-        const pizzaItem = menu.getItemByCode("S_PIZZA");
-        expect(pizzaItem).not.toBeNull();
+      const pizzaItem = menu.getItemByCode("S_PIZZA");
+      expect(pizzaItem).not.toBeNull();
 
-        expect(pizzaItem.getName()).toBe("Pizza");
-      });
+      expect(pizzaItem.getName()).toBe("Pizza");
     });
   });
 });
